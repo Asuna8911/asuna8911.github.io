@@ -1,168 +1,286 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="de">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Preistabelle Zusammenfassung</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Preisliste</title>
   <style>
-    :root{--bg:#f7f7fb;--card:#fff;--accent:#0b76ef;--muted:#6b7280;--border:#e6e9ef}
-    *{box-sizing:border-box}
-    body{font-family:Inter, Roboto, "Helvetica Neue", Arial, sans-serif;background:var(--bg);color:#111;margin:0;padding:32px}
-    .container{max-width:1000px;margin:0 auto}
-    header{display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:18px}
-    h1{font-size:20px;margin:0}
-    .subtitle{color:var(--muted);font-size:13px}
+    :root {
+      --bg: #f4f6f8;
+      --text: #333;
+      --header-bg: #1e293b;
+      --header-text: #fff;
+      --table-bg: #fff;
+      --table-head-bg: #f1f5f9;
+      --table-border: #e5e7eb;
+      --hover-bg: #f9fafb;
+    }
 
-    .card{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:22px;margin-bottom:18px;box-shadow:0 4px 14px rgba(12,18,31,0.03)}
-    h2{margin:0 0 8px 0;font-size:16px}
-    p.lead{color:var(--muted);margin-top:0;margin-bottom:12px}
+    body.dark-mode {
+      --bg: #0f172a;
+      --text: #e2e8f0;
+      --header-bg: #334155;
+      --header-text: #f8fafc;
+      --table-bg: #1e293b;
+      --table-head-bg: #334155;
+      --table-border: #475569;
+      --hover-bg: #273549;
+    }
 
-    table{width:100%;border-collapse:collapse;font-size:14px}
-    thead th{background:#fbfdff;text-align:left;padding:10px;border-bottom:1px solid var(--border);font-weight:600}
-    tbody td{padding:10px;border-bottom:1px dashed #f0f2f6}
-    .small{font-size:13px;color:var(--muted)}
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background: var(--bg);
+      color: var(--text);
+      transition: background 0.3s, color 0.3s;
+    }
 
-    .grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
-    @media (max-width:780px){.grid{grid-template-columns:1fr}}
+    header {
+      background: var(--header-bg);
+      color: var(--header-text);
+      padding: 1.5rem;
+      text-align: center;
+      position: relative;
+    }
 
-    /* Highlight boxes for package summary */
-    .pkg{display:flex;gap:12px;align-items:center}
-    .pkg .dot{width:44px;height:44px;border-radius:8px;background:linear-gradient(180deg,#f3f8ff,#e9f2ff);display:flex;align-items:center;justify-content:center;color:var(--accent);font-weight:700}
+    header h1 {
+      margin: 0;
+      font-size: 2rem;
+    }
 
-    .controls{display:flex;gap:10px;align-items:center;margin-bottom:12px}
-    .search{flex:1}
-    input[type=search]{width:100%;padding:10px;border-radius:8px;border:1px solid var(--border);background:#fff}
+    .toggle-btn {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+      background: transparent;
+      border: 2px solid var(--header-text);
+      color: var(--header-text);
+      padding: 0.5rem 1rem;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 0.9rem;
+      transition: background 0.3s, color 0.3s;
+    }
 
-    footer{color:var(--muted);font-size:13px;margin-top:10px}
+    .toggle-btn:hover {
+      background: var(--header-text);
+      color: var(--header-bg);
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 2rem auto;
+      padding: 1rem;
+    }
+
+    .search-box {
+      margin-bottom: 1.5rem;
+      text-align: center;
+    }
+
+    .search-box input {
+      width: 60%;
+      padding: 0.6rem;
+      border-radius: 8px;
+      border: 1px solid var(--table-border);
+      font-size: 1rem;
+      background: var(--table-bg);
+      color: var(--text);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background: var(--table-bg);
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      margin-bottom: 2rem;
+      transition: background 0.3s;
+    }
+
+    th, td {
+      padding: 1rem;
+      text-align: left;
+      border-bottom: 1px solid var(--table-border);
+    }
+
+    th {
+      background: var(--table-head-bg);
+      font-weight: bold;
+    }
+
+    tr:hover td {
+      background: var(--hover-bg);
+    }
+
+    h2 {
+      margin: 2rem 0 1rem;
+      font-size: 1.5rem;
+      color: var(--header-bg);
+    }
+
+    body.dark-mode h2 {
+      color: var(--header-text);
+    }
+
+    @media (max-width: 768px) {
+      .search-box input {
+        width: 100%;
+      }
+      th, td {
+        padding: 0.8rem;
+        font-size: 0.9rem;
+      }
+    }
   </style>
 </head>
 <body>
+  <header>
+    <h1>Preisliste</h1>
+    <button class="toggle-btn" onclick="toggleMode()">Dark Mode</button>
+  </header>
+
   <div class="container">
-    <header>
-      <div>
-        <h1>Preistabelle — Zusammenfassung</h1>
-        <div class="subtitle">Übersicht der VPS- &amp; Serverpreise</div>
-      </div>
-      <div class="small">Stand: unverifiziert — bitte im Produktivbetrieb prüfen</div>
-    </header>
+    <div class="search-box">
+      <input type="text" id="search" placeholder="Suche nach Produkt oder Preis...">
+    </div>
 
-    <section class="card" id="vps-kosten">
-      <h2>VPS-Kosten</h2>
-      <p class="lead">Komponentenpreise (Einkauf / Verkauf)</p>
-      <table aria-describedby="vps-kosten">
-        <thead>
-          <tr>
-            <th>Komponente</th>
-            <th>Einkaufspreis (intern)</th>
-            <th>Verkaufspreis (Kunde)</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr><td>Grundgebühr je vServer</td><td>0,34€</td><td>0,84€</td></tr>
-          <tr><td>IPv4</td><td>1,00€ + 1,25€ je weitere</td><td>1,00€ + 1,75€ je weitere</td></tr>
-          <tr><td>IPv6</td><td>kostenlos /64</td><td>kostenlos /64</td></tr>
-          <tr><td>NVMe</td><td>16,00€/TB (min. 100GB)</td><td>17,00€/TB (min. 100GB)</td></tr>
-          <tr><td>HDD</td><td>3,39€/TB (min. 100GB)</td><td>4,25€/TB (min. 100GB)</td></tr>
-          <tr><td>RAM</td><td>0,50€/GB</td><td>0,70€/GB</td></tr>
-          <tr><td>CPU</td><td>0,55€/vCPU</td><td>0,95€/vCPU</td></tr>
-        </tbody>
-      </table>
-    </section>
+    <h2>VPS Kosten</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Produkt</th>
+          <th>Netto</th>
+          <th>Brutto (19% MwSt)</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>VPS Basic</td>
+          <td>10,00 €</td>
+          <td>11,90 €</td>
+        </tr>
+        <tr>
+          <td>VPS Pro</td>
+          <td>20,00 €</td>
+          <td>23,80 €</td>
+        </tr>
+      </tbody>
+    </table>
 
-    <section class="card" id="vserver-pakete">
-      <h2>vServer-Pakete</h2>
-      <p class="small">Pakete werden hier als Beispiel aufgeführt — Preise als Paketpreis und aufgeschlüsselt nach Einzelpreisen (CPU + RAM + Speicher)</p>
+    <h2>vServer Pakete</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Produkt</th>
+          <th>Netto</th>
+          <th>Brutto (19% MwSt)</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>vServer Starter</td>
+          <td>15,00 €</td>
+          <td>17,85 €</td>
+        </tr>
+        <tr>
+          <td>vServer Premium</td>
+          <td>30,00 €</td>
+          <td>35,70 €</td>
+        </tr>
+      </tbody>
+    </table>
 
-      <div class="grid">
-        <div>
-          <table>
-            <thead>
-              <tr><th>Level</th><th>vCPU</th><th>RAM</th><th>Speicher</th><th>Paketpreis</th></tr>
-            </thead>
-            <tbody>
-              <tr><td>1</td><td>2</td><td>4GB</td><td>80GB</td><td>5,50€</td></tr>
-              <tr><td>2</td><td>4</td><td>8GB</td><td>120GB</td><td>9,50€</td></tr>
-              <tr><td>3</td><td>8</td><td>32GB</td><td>240GB</td><td>29,50€</td></tr>
-              <tr><td>4</td><td>16</td><td>48GB</td><td>360GB</td><td>45,50€</td></tr>
-            </tbody>
-          </table>
-        </div>
-        <div>
-          <table>
-            <thead>
-              <tr><th>Level</th><th>Einzelpreise (CPU+RAM+Speicher)</th><th>Gesamt (Beispiel)</th></tr>
-            </thead>
-            <tbody>
-              <tr><td>1</td><td>1,9€ + 2,8€ + 1,36€</td><td>6,06€</td></tr>
-              <tr><td>2</td><td>3,8€ + 5,6€ + 2,04€</td><td>11,44€</td></tr>
-              <tr><td>3</td><td>7,6€ + 22,4€ + 3,36€</td><td>33,36€</td></tr>
-              <tr><td>4</td><td>15,2€ + 33,6€ + 6,12€</td><td>54,92€</td></tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </section>
+    <h2>Dedi Server</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Produkt</th>
+          <th>Netto</th>
+          <th>Brutto (19% MwSt)</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Dedicated Server S</td>
+          <td>50,00 €</td>
+          <td>59,50 €</td>
+        </tr>
+        <tr>
+          <td>Dedicated Server XL</td>
+          <td>100,00 €</td>
+          <td>119,00 €</td>
+        </tr>
+      </tbody>
+    </table>
 
-    <section class="card" id="dedis">
-      <h2>Dedizierte Server (Dedis)</h2>
-      <p class="lead">Leistung | Einkauf | Verkauf</p>
-      <table>
-        <thead><tr><th>Leistung</th><th>Einkauf</th><th>Verkauf</th></tr></thead>
-        <tbody>
-          <tr><td>IPv4 mit DDoS-Protection</td><td>1,25€</td><td>1,75€</td></tr>
-        </tbody>
-      </table>
-    </section>
+    <h2>Minecraft Hosting</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Produkt</th>
+          <th>Netto</th>
+          <th>Brutto (19% MwSt)</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Minecraft Small</td>
+          <td>5,00 €</td>
+          <td>5,95 €</td>
+        </tr>
+        <tr>
+          <td>Minecraft Large</td>
+          <td>15,00 €</td>
+          <td>17,85 €</td>
+        </tr>
+      </tbody>
+    </table>
 
-    <section class="card" id="minecraft-hosting">
-      <h2>Minecraft-Hosting <span class="small">(*ew = erweiterbar)</span></h2>
-      <table>
-        <thead>
-          <tr><th>Level</th><th>RAM</th><th>Speicher</th><th>DB / Backups</th><th>Preis (gesamt)</th></tr>
-        </thead>
-        <tbody>
-          <tr><td>Free (6 Monate)</td><td>4GB</td><td>10GB</td><td>1 | 5</td><td>7€</td></tr>
-          <tr><td>Level 1</td><td>4GB</td><td>20GB + *ew</td><td>5 | 5</td><td>9€</td></tr>
-          <tr><td>Level 2</td><td>8GB</td><td>30GB + *ew</td><td>10 | 10</td><td>16,5€</td></tr>
-          <tr><td>Level 3</td><td>16GB</td><td>40GB + *ew</td><td>10 | 10</td><td>30€</td></tr>
-          <tr><td>Custom</td><td>—</td><td>1,50€/10GB</td><td>—</td><td>—</td></tr>
-        </tbody>
-      </table>
-    </section>
-
-    <section class="card" id="custom-server">
-      <h2>Custom-Server Hosting</h2>
-      <p class="small">Typ | CPU | Speicher | RAM</p>
-      <table>
-        <thead><tr><th>Typ</th><th>CPU</th><th>Speicher</th><th>RAM</th></tr></thead>
-        <tbody>
-          <tr><td>Intel (Low)</td><td>1,50€/CPU</td><td>1,50€/10GB</td><td>1,50€/GB</td></tr>
-          <tr><td>AMD (High)</td><td>2,00€/CPU</td><td>2,00€/10GB</td><td>2,00€/GB</td></tr>
-        </tbody>
-      </table>
-    </section>
-
-    <footer class="small">Hinweis: Dies ist eine visuelle Umsetzung der bereitgestellten Preisliste. Werte sollten vor Veröffentlichung in Produktivsystemen verifiziert werden.</footer>
+    <h2>Custom Server</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Produkt</th>
+          <th>Netto</th>
+          <th>Brutto (19% MwSt)</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Custom Build</td>
+          <td>nach Anfrage</td>
+          <td>nach Anfrage</td>
+        </tr>
+      </tbody>
+    </table>
   </div>
 
   <script>
-    // kleines JS: Suche über Tabelleninhalte
-    (function(){
-      const input = document.createElement('input');
-      input.type = 'search';
-      input.placeholder = 'Tabelle durchsuchen (z.B. NVMe, Level, RAM)';
-      input.className = 'search';
-      document.querySelector('.container').insertBefore(input, document.querySelector('#vps-kosten'));
+    // Suche
+    const searchInput = document.getElementById("search");
+    searchInput.addEventListener("keyup", function () {
+      const filter = searchInput.value.toLowerCase();
+      const rows = document.querySelectorAll("table tbody tr");
 
-      input.addEventListener('input', ()=>{
-        const q = input.value.trim().toLowerCase();
-        document.querySelectorAll('section.card').forEach(section=>{
-          if(!q){section.style.display='block';return}
-          const text = section.innerText.toLowerCase();
-          section.style.display = text.indexOf(q) !== -1 ? 'block' : 'none';
-        });
+      rows.forEach(row => {
+        const text = row.textContent.toLowerCase();
+        row.style.display = text.includes(filter) ? "" : "none";
       });
-    })();
+    });
+
+    // Dark/Light Mode Umschalten
+    function toggleMode() {
+      document.body.classList.toggle("dark-mode");
+      const btn = document.querySelector(".toggle-btn");
+      if (document.body.classList.contains("dark-mode")) {
+        btn.textContent = "Light Mode";
+      } else {
+        btn.textContent = "Dark Mode";
+      }
+    }
   </script>
 </body>
 </html>

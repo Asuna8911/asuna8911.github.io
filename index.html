@@ -260,16 +260,36 @@
 
   <script>
     // Suche
-    const searchInput = document.getElementById("search");
-    searchInput.addEventListener("keyup", function () {
-      const filter = searchInput.value.toLowerCase();
-      const rows = document.querySelectorAll("table tbody tr");
+const searchInput = document.getElementById("search");
+searchInput.addEventListener("keyup", function () {
+  const filter = searchInput.value.toLowerCase();
+  const tables = document.querySelectorAll(".container table");
 
-      rows.forEach(row => {
-        const text = row.textContent.toLowerCase();
-        row.style.display = text.includes(filter) ? "" : "none";
-      });
+  tables.forEach(table => {
+    const rows = table.querySelectorAll("tbody tr");
+    let hasMatch = false;
+
+    rows.forEach(row => {
+      const text = row.textContent.toLowerCase();
+      if (text.includes(filter)) {
+        row.style.display = "";
+        hasMatch = true;
+      } else {
+        row.style.display = "none";
+      }
     });
+
+    // Tabelle und Überschrift nur zeigen, wenn mindestens ein Treffer
+    const heading = table.previousElementSibling; // <h2> direkt vor der Tabelle
+    if (hasMatch) {
+      table.style.display = "";
+      heading.style.display = "";
+    } else {
+      table.style.display = "none";
+      heading.style.display = "none";
+    }
+  });
+});
 
     // Dark/Light Mode Umschalten
     function toggleMode() {

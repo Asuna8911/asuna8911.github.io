@@ -220,76 +220,163 @@
     <table>
       <thead>
         <tr>
-          <th>Produkt</th>
-          <th>Netto</th>
-          <th>Brutto (19% MwSt)</th>
+          <th>Level</th>
+          <th>RAM</th>
+          <th>Speicher</th>
+          <th>DB</th>
+          <th>Backups</th>
+          <th>Preis</th>
+          <th>RAM-Preis</th>
+          <th>Speicher-Preis</th>
+          <th>Gesamt</th>
         </tr>
       </thead>
       <tbody>
         <tr>
-          <td>Minecraft Small</td>
-          <td>5,00 €</td>
-          <td>5,95 €</td>
+          <td>Free (6 Monate)</td>
+          <td>4GB</td>
+          <td>10GB</td>
+          <td>1</td>
+          <td>5</td>
+          <td>0€</td>
+          <td>6€</td>
+          <td>1€</td>
+          <td>7€</td>
         </tr>
         <tr>
-          <td>Minecraft Large</td>
-          <td>15,00 €</td>
-          <td>17,85 €</td>
+          <td>Level 1</td>
+          <td>4GB</td>
+          <td>20GB + *ew</td>
+          <td>5 b</td>
+          <td>5</td>
+          <td>8€</td>
+          <td>6€</td>
+          <td>3€</td>
+          <td>9€</td>
+        </tr>
+        <tr>
+          <td>Level 2</td>
+          <td>8GB</td>
+          <td>30GB + *ew</td>
+          <td>10</td>
+          <td>10</td>
+          <td>14€</td>
+          <td>12€</td>
+          <td>4,5€</td>
+          <td>16,5€</td>
+        </tr>
+        <tr>
+          <td>Level 3</td>
+          <td>16GB</td>
+          <td>40GB + *ew</td>
+          <td>10</td>
+          <td>10</td>
+          <td>27€</td>
+          <td>24€</td>
+          <td>6€</td>
+          <td>30€</td>
+        </tr>
+        <tr>
+          <td>Custom</td>
+          <td>—</td>
+          <td>1,50€/10GB</td>
+          <td>—</td>
+          <td>—</td>
+          <td>—</td>
+          <td>1,50€/GB</td>
+          <td>1,50€/10GB</td>
+          <td>—</td>
         </tr>
       </tbody>
     </table>
 
-    <h2>Custom Server</h2>
+    <h2>vServer-Pakete (Details)</h2>
     <table>
       <thead>
         <tr>
-          <th>Produkt</th>
-          <th>Netto</th>
-          <th>Brutto (19% MwSt)</th>
+          <th>Level</th>
+          <th>vCPU</th>
+          <th>RAM</th>
+          <th>Speicher</th>
+          <th>Paketpreis</th>
+          <th>Einzelpreise (CPU+RAM+Speicher)</th>
+          <th>Gesamt</th>
         </tr>
       </thead>
       <tbody>
         <tr>
-          <td>Custom Build</td>
-          <td>nach Anfrage</td>
-          <td>nach Anfrage</td>
+          <td>1</td>
+          <td>2</td>
+          <td>4GB</td>
+          <td>80GB</td>
+          <td>5,50€</td>
+          <td>1,9€ + 2,8€ + 1,36€</td>
+          <td>6,06€</td>
+        </tr>
+        <tr>
+          <td>2</td>
+          <td>4</td>
+          <td>8GB</td>
+          <td>120GB</td>
+          <td>9,50€</td>
+          <td>3,8€ + 5,6€ + 2,04€</td>
+          <td>11,44€</td>
+        </tr>
+        <tr>
+          <td>3</td>
+          <td>8</td>
+          <td>32GB</td>
+          <td>240GB</td>
+          <td>29,50€</td>
+          <td>7,6€ + 22,4€ + 3,36€</td>
+          <td>33,36€</td>
+        </tr>
+        <tr>
+          <td>4</td>
+          <td>16</td>
+          <td>48GB</td>
+          <td>360GB</td>
+          <td>45,50€</td>
+          <td>15,2€ + 33,6€ + 6,12€</td>
+          <td>54,92€</td>
         </tr>
       </tbody>
     </table>
+
   </div>
 
   <script>
     // Suche
-const searchInput = document.getElementById("search");
-searchInput.addEventListener("keyup", function () {
-  const filter = searchInput.value.toLowerCase();
-  const tables = document.querySelectorAll(".container table");
+    const searchInput = document.getElementById("search");
+    searchInput.addEventListener("keyup", function () {
+      const filter = searchInput.value.toLowerCase();
+      const tables = document.querySelectorAll(".container table");
 
-  tables.forEach(table => {
-    const rows = table.querySelectorAll("tbody tr");
-    let hasMatch = false;
+      tables.forEach(table => {
+        const rows = table.querySelectorAll("tbody tr");
+        let hasMatch = false;
 
-    rows.forEach(row => {
-      const text = row.textContent.toLowerCase();
-      if (text.includes(filter)) {
-        row.style.display = "";
-        hasMatch = true;
-      } else {
-        row.style.display = "none";
-      }
+        rows.forEach(row => {
+          const text = row.textContent.toLowerCase();
+          if (text.includes(filter)) {
+            row.style.display = "";
+            hasMatch = true;
+          } else {
+            row.style.display = "none";
+          }
+        });
+
+        // Tabelle und Überschrift nur zeigen, wenn mindestens ein Treffer
+        const heading = table.previousElementSibling; // <h2> direkt vor der Tabelle
+        if (hasMatch) {
+          table.style.display = "";
+          heading.style.display = "";
+        } else {
+          table.style.display = "none";
+          heading.style.display = "none";
+        }
+      });
     });
-
-    // Tabelle und Überschrift nur zeigen, wenn mindestens ein Treffer
-    const heading = table.previousElementSibling; // <h2> direkt vor der Tabelle
-    if (hasMatch) {
-      table.style.display = "";
-      heading.style.display = "";
-    } else {
-      table.style.display = "none";
-      heading.style.display = "none";
-    }
-  });
-});
 
     // Dark/Light Mode Umschalten
     function toggleMode() {
